@@ -63,7 +63,6 @@ impl<'a> Lexer<'a> {
                 } else {
                     Token::BANG
                 }
-
             }
             Some(ch) => match SYMBOL_MAP.get(ch) {
                 Some(token) => {
@@ -166,7 +165,6 @@ mod tests {
             10 == 10;
             10 != 9;
         "};
-
 
         let mut lexer = Lexer::new(input);
 
