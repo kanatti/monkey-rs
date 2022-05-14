@@ -8,10 +8,17 @@ pub enum Token {
 
     ASSIGN,
     PLUS,
+    MINUS,
+    EQUALS,
+    NOTEQUALS,
+    BANG,
+    ASTERISK,
+    SLASH,
+    LT,
+    GT,
 
     COMA,
     SEMICOLON,
-
     LPAREN,
     RPAREN,
     LBRACE,
@@ -19,4 +26,6 @@ pub enum Token {
 
     FUNCTION,
     LET,
+    TRUE,
+    FALSE,
 }

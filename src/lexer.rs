@@ -11,6 +11,12 @@ pub struct Lexer<'a> {
 static SYMBOL_MAP: phf::Map<char, Token> = phf_map! {
     '=' => Token::ASSIGN,
     '+' => Token::PLUS,
+    '-' => Token::MINUS,
+    '!' => Token::BANG,
+    '*' => Token::ASTERISK,
+    '/' => Token::SLASH,
+    '<' => Token::LT,
+    '>' => Token::GT,
     ',' => Token::COMA,
     ';' => Token::SEMICOLON,
     '(' => Token::LPAREN,
@@ -22,6 +28,8 @@ static SYMBOL_MAP: phf::Map<char, Token> = phf_map! {
 static KEYWORD_MAP: phf::Map<&'static str, Token> = phf_map! {
     "let" => Token::LET,
     "fn" => Token::FUNCTION,
+    "true" => Token::TRUE,
+    "false" => Token::FALSE,
 };
 
 impl<'a> Lexer<'a> {
@@ -38,6 +46,25 @@ impl<'a> Lexer<'a> {
 
     fn _next_token(&mut self) -> Token {
         match self.peek() {
+            Some('=') => {
+                let _ = self.consume();
+                if let Some('=') = self.peek() {
+                    let _ = self.consume();
+                    Token::EQUALS
+                } else {
+                    Token::ASSIGN
+                }
+            }
+            Some('!') => {
+                let _ = self.consume();
+                if let Some('=') = self.peek() {
+                    let _ = self.consume();
+                    Token::NOTEQUALS
+                } else {
+                    Token::BANG
+                }
+
+            }
             Some(ch) => match SYMBOL_MAP.get(ch) {
                 Some(token) => {
                     let _ = self.consume();
@@ -129,6 +156,15 @@ mod tests {
             };
 
             let result = add(five, ten);
+
+            let sum = 2 - 3 * 4 + 4/2;
+
+            false = !true;
+
+            1 < 2 > 3;
+
+            10 == 10;
+            10 != 9;
         "};
 
 
@@ -170,6 +206,38 @@ mod tests {
             Token::COMA,
             Token::IDENT("ten".to_string()),
             Token::RPAREN,
+            Token::SEMICOLON,
+            Token::LET,
+            Token::IDENT("sum".to_string()),
+            Token::ASSIGN,
+            Token::INT(2),
+            Token::MINUS,
+            Token::INT(3),
+            Token::ASTERISK,
+            Token::INT(4),
+            Token::PLUS,
+            Token::INT(4),
+            Token::SLASH,
+            Token::INT(2),
+            Token::SEMICOLON,
+            Token::FALSE,
+            Token::ASSIGN,
+            Token::BANG,
+            Token::TRUE,
+            Token::SEMICOLON,
+            Token::INT(1),
+            Token::LT,
+            Token::INT(2),
+            Token::GT,
+            Token::INT(3),
+            Token::SEMICOLON,
+            Token::INT(10),
+            Token::EQUALS,
+            Token::INT(10),
+            Token::SEMICOLON,
+            Token::INT(10),
+            Token::NOTEQUALS,
+            Token::INT(9),
             Token::SEMICOLON,
             Token::EOF,
         ];
